@@ -1,0 +1,24 @@
+<h1>📩 SMS History</h1>
+
+{% if sms_data %}
+
+    {% for key, sms in sms_data.items() %}
+
+        <div class="card">
+
+            <p><b>Crop Type:</b> {{ sms.crop_type }}</p>
+            
+
+            <p><b>Phone:</b> {{ sms.phone }}</p>
+
+            <p><b>Message:</b> {{ sms.message }}</p>
+
+            <p><b>Status:</b> {{ sms.status }}</p>
+
+            <p><b>Time:</b> {{ sms.time }}</p>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}

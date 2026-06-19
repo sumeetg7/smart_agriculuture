@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body style="text-align:center; margin-top:100px;">
+    <div class="login-container">
+
+
+    <h1>Login Page</h1>
+
+    <form method="POST">
+
+        <input type="text"
+               name="username"
+               placeholder="👤 Username"
+               required><br><br>
+        
+        <input type="text"
+               name="phone"
+               placeholder="📱 Phone Number"
+               required><br><br>
+
+
+
+       
+        <div class="password-box">
+
+            <input type="password"
+                   id="loginPassword"
+                   name="password"
+                   placeholder="🔒 Enter Password"
+                   required>
+
+            <span onclick="toggleLoginPassword()">
+                👁️</span>
+        </div>
+        <br><br>
+        
+
+        <button type="submit" class="neon-btn">
+            Login
+        </button>
+
+    </form>
+
+
+
+<script>
+
+function toggleLoginPassword(){
+
+    var password =
+        document.getElementById("loginPassword");
+
+    if(password.type === "password"){
+
+        password.type = "text";
+
+    }else{
+
+        password.type = "password";
+
+    }
+}
+
+</script>
+
+
+
+</div>
+
+</body>
+</html>

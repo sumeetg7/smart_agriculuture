@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Edit Profile</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static',
+    filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="edit-profile-container">
+
+
+
+    <h1>✏️ Edit Farmer Profile</h1>
+
+    <form method="POST">
+
+
+
+        <label>📍 Location</label>
+        <input type="text"
+        name="location"
+        value="{{ farmer['location'] }}">
+
+        <label>🏛 District</label>
+        <input type="text"
+        name="district"
+        value="{{ farmer['district'] }}">
+
+        <label>🌎 State</label>
+        <input type="text"
+        name="state"
+        value="{{ farmer['state'] }}">
+
+
+        <label>📨 Email</label>
+        <input type="email"
+        name="email"
+        value="{{ farmer['email'] }}">
+
+        <label>🌾 Crop Type</label>
+        <input type="text"
+        name="crop_type"
+        value="{{ farmer.get('crop_type', '') }}"
+        placeholder="Enter Crop Type">
+
+        <label>📏 Farm Area (Acres)</label>
+        <input type="text"
+        name="farm_area"
+        value="{{ farmer.get('farm_area', '') }}"
+        placeholder="Enter Farm Area">
+
+        <label>📱 Phone Number</label>
+        <input type="text"
+        name="phone"
+        value="{{ farmer['phone'] }}">
+
+        <button type="submit"
+        class="neon-btn green-btn">
+            💾 Save Changes
+        </button>
+
+    </form>
+
+
+
+    
+    
+</div>
+
+</body>
+</html>

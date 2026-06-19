@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="text-align:center; margin-top:100px;">
+
+    <div class="logo">
+        👨‍🌾
+    </div>
+
+    <h1>Registration Page</h1>
+
+    <form method="POST">
+
+        <input type="text"
+               name="username"
+               placeholder="👤 Enter Username"
+               required><br><br>
+
+        <input type="text"
+                name="phone"
+                placeholder="📱 Enter Phone Number"
+                required><br><br>
+
+
+        <input type="email"
+               name="email"
+               placeholder="📧 Enter Email"
+               required><br><br>
+
+        <input type="text"
+               name="location"
+               placeholder="📍 Enter Location"
+               required><br><br>
+        
+        <input type="text"
+               name="district"
+               placeholder="🏡 Enter District"
+               required><br><br>
+
+        <select name="state" required>
+
+            <option value="">🌎 Select State</option>
+
+            <option value="Karnataka">Karnataka</option>
+
+            <option value="Tamil Nadu">Tamil Nadu</option>
+
+            <option value="Kerala">Kerala</option>
+
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+
+            <option value="Telangana">Telangana</option>
+
+            <option value="Maharashtra">Maharashtra</option>
+
+            <option value="Goa">Goa</option>
+
+        </select>
+        <br><br>
+
+        <div class="password-box">
+
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="🔒 Enter Password"
+                   required>
+
+            <span onclick="togglePassword()">
+                👁️
+            </span>
+
+        </div>
+        <br><br>
+
+
+        <button type="submit" class="neon-btn
+        green-btn">
+            Register
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/login">
+        <button type="button" class="neon-btn
+        red-btn">
+            Go to Login
+        </button>
+    </a>
+
+
+<script>
+
+function togglePassword(){
+
+    var password = document.getElementById("password");
+
+    if(password.type === "password"){
+
+        password.type = "text";
+
+    }else{
+
+        password.type = "password";
+
+    }
+}
+
+</script>
+
+
+
+
+</body>
+</html>

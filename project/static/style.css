@@ -1,0 +1,1460 @@
+html {
+    scroll-behaviour: smooth;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family: Arial, sans-serif;
+
+    background:#0f172a;
+
+    color:white;
+
+    min-height:100vh;
+
+    overflow-x:hidden;
+}
+
+.background{
+
+    position:fixed;
+
+    width:100%;
+    height:100%;
+
+    background:
+    linear-gradient(
+    135deg,
+    #0f172a,
+    #1e293b,
+    #0f172a
+    );
+
+    z-index:-1;
+}
+
+.container{
+
+    width:90%;
+
+    margin:auto;
+
+    padding:30px;
+}
+
+h1{
+
+    text-align:center;
+
+    margin-bottom:40px;
+
+    font-size:40px;
+
+    color:#38bdf8;
+}
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:25px;
+}
+
+.card{
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: rgba(255,255,255,0.08);
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    backdrop-filter: blur(12px);
+
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+
+    transition: all 0.4s ease;
+
+    animation: floatCard 4s ease-in-out infinite;
+}
+
+/* Hover Animation */
+
+.card:hover{
+
+    transform:
+    translateY(-12px)
+    scale(1.03);
+
+    box-shadow:
+    0 15px 35px rgba(56,189,248,0.4);
+
+    background:
+    rgba(255,255,255,0.12);
+}
+
+/* Animated Glow Border */
+
+.card::before{
+
+    content: "";
+
+    position: absolute;
+
+    top: -50%;
+
+    left: -50%;
+
+    width: 200%;
+
+    height: 200%;
+
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(56,189,248,0.3),
+        transparent
+    );
+
+    transform: rotate(25deg);
+
+    animation: shine 5s linear infinite;
+}
+
+/* Card Content Above Animation */
+
+.card *{
+
+    position: relative;
+
+    z-index: 2;
+}
+
+/* Floating Animation */
+
+@keyframes floatCard {
+
+    0%{
+        transform: translateY(0px);
+    }
+
+    50%{
+        transform: translateY(-8px);
+    }
+
+    100%{
+        transform: translateY(0px);
+    }
+}
+
+/* Shining Animation */
+
+@keyframes shine {
+
+    0%{
+        transform:
+        translateX(-100%)
+        rotate(25deg);
+    }
+
+    100%{
+        transform:
+        translateX(100%)
+        rotate(25deg);
+    }
+}
+
+.card h2{
+
+    margin-bottom:15px;
+
+    color:#38bdf8;
+}
+
+.card p{
+
+    font-size:28px;
+
+    font-weight:bold;
+}
+
+.alert{
+
+    margin-top:30px;
+
+    background:#ef4444;
+
+    padding:18px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    box-shadow:0 0 20px rgba(239,68,68,0.5);
+}
+
+.charts{
+
+    margin-top:40px;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(350px,1fr));
+
+    gap:30px;
+}
+
+.chart-card{
+
+    background:rgba(255,255,255,0.08);
+
+    padding:25px;
+
+    border-radius:20px;
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+
+canvas{
+
+    margin-top:20px;
+}
+
+@media(max-width:768px){
+
+    h1{
+        font-size:28px;
+    }
+
+    .card p{
+        font-size:22px;
+    }
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
+    width: 270px;
+
+    height: 100vh;
+
+    overflow-y: auto;
+
+    background: rgba(0,0,0,0.4);
+
+    backdrop-filter: blur(15px);
+
+    padding-top: 30px;
+
+    box-shadow: 5px 0 25px rgba(0,0,0,0.3);
+}
+
+/* LOGO */
+
+.logo{
+
+    color: white;
+
+    text-align: center;
+
+    margin-bottom: 40px;
+
+    font-size: 28px;
+}
+
+/* MENU */
+
+.sidebar ul{
+
+    list-style: none;
+
+    padding: 0;
+}
+
+.sidebar ul li{
+
+    margin: 20px 0;
+}
+
+/* LINKS */
+
+.sidebar ul li a{
+
+    text-decoration: none;
+
+    color: white;
+
+    font-size: 18px;
+
+    padding: 15px 25px;
+
+    display: block;
+
+    transition: 0.3s;
+
+    border-radius: 10px;
+}
+
+/* HOVER EFFECT */
+
+.sidebar ul li a:hover{
+
+    background: rgba(56,189,248,0.3);
+
+    transform: translateX(10px);
+}
+
+/* MAIN CONTENT */
+
+.main-content{
+
+    margin-left: 300px;
+
+    padding: 20px;
+}
+
+
+/* WEATHER ANIMATION CONTAINER */
+
+.weather-animation{
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow: hidden;
+
+    z-index: -1;
+}
+
+/* SUN */
+
+.sun{
+
+    position: absolute;
+
+    top: 60px;
+
+    right: 120px;
+
+    width: 120px;
+
+    height: 120px;
+
+    background: #ffd93d;
+
+    border-radius: 50%;
+
+    box-shadow:
+    0 0 60px #ffd93d;
+
+    animation: sunGlow 3s infinite alternate;
+}
+
+/* SUN GLOW */
+
+@keyframes sunGlow{
+
+    from{
+        transform: scale(1);
+    }
+
+    to{
+        transform: scale(1.1);
+    }
+}
+
+/* CLOUDS */
+
+.cloud{
+
+    position: absolute;
+
+    background: rgba(255,255,255,0.8);
+
+    border-radius: 50px;
+
+    opacity: 0.8;
+}
+
+/* CLOUD BEFORE */
+
+.cloud::before{
+
+    content: "";
+
+    position: absolute;
+
+    background: rgba(255,255,255,0.8);
+
+    width: 60px;
+
+    height: 60px;
+
+    top: -30px;
+
+    left: 10px;
+
+    border-radius: 50%;
+}
+
+/* CLOUD 1 */
+
+.cloud1{
+
+    width: 180px;
+
+    height: 60px;
+
+    top: 100px;
+
+    left: -200px;
+
+    animation: moveCloud 25s linear infinite;
+}
+
+/* CLOUD 2 */
+
+.cloud2{
+
+    width: 220px;
+
+    height: 70px;
+
+    top: 200px;
+
+    left: -250px;
+
+    animation: moveCloud 35s linear infinite;
+}
+
+/* CLOUD MOVEMENT */
+
+@keyframes moveCloud{
+
+    from{
+        left: -300px;
+    }
+
+    to{
+        left: 120%;
+    }
+}
+
+/* RAIN EFFECT */
+
+.rain{
+
+    position: absolute;
+
+    width: 100%;
+
+    height: 100%;
+
+    background-image:
+    linear-gradient(
+        transparent,
+        rgba(255,255,255,0.3)
+    );
+
+    background-size: 3px 50px;
+
+    animation: rainFall 0.5s linear infinite;
+
+    opacity: 0.15;
+}
+
+/* RAIN ANIMATION */
+
+@keyframes rainFall{
+
+    from{
+        background-position: 0 0;
+    }
+
+    to{
+        background-position: 0 50px;
+    }
+}
+
+
+
+/* IRRIGATION CARD */
+
+.irrigation-card{
+
+    border: 2px solid #38bdf8;
+}
+
+/* PUMP STATUS */
+
+#pumpStatus{
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+    margin-top: 15px;
+
+    animation: pulse 2s infinite;
+}
+
+/* PULSE EFFECT */
+
+@keyframes pulse{
+
+    0%{
+        transform: scale(1);
+    }
+
+    50%{
+        transform: scale(1.08);
+    }
+
+    100%{
+        transform: scale(1);
+    }
+}
+
+
+
+
+/* =========================
+   MOBILE RESPONSIVE DESIGN
+========================= */
+
+@media screen and (max-width: 768px){
+
+    /* Sidebar */
+
+    .sidebar{
+
+        width: 100%;
+
+        height: auto;
+
+        position: relative;
+
+        padding: 15px;
+    }
+
+    .sidebar ul{
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+    }
+
+    .sidebar ul li{
+
+        margin: 10px;
+    }
+
+    .sidebar ul li a{
+
+        font-size: 14px;
+
+        padding: 10px 15px;
+    }
+
+    /* Main Content */
+
+    .main-content{
+
+        margin-left: 0;
+
+        padding: 15px;
+    }
+
+    /* Dashboard Cards */
+
+    .dashboard{
+
+        grid-template-columns: 1fr;
+    }
+
+    .card{
+
+        padding: 20px;
+    }
+
+    .card h2{
+
+        font-size: 20px;
+    }
+
+    .card p{
+
+        font-size: 18px;
+    }
+
+    /* Charts */
+
+    .charts{
+
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card{
+
+        width: 100%;
+    }
+
+    canvas{
+
+        width: 100% !important;
+
+        height: auto !important;
+    }
+
+    /* Heading */
+
+    h1{
+
+        font-size: 28px;
+    }
+
+    /* Alert Box */
+
+    .alert{
+
+        font-size: 16px;
+
+        padding: 12px;
+    }
+}
+
+
+/* REAL TIME CLOCK */
+
+.clock-container{
+
+    text-align: right;
+
+    margin-bottom: 20px;
+
+    color: white;
+}
+
+#clock{
+
+    font-size: 32px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+}
+
+#date{
+
+    font-size: 18px;
+
+    opacity: 0.8;
+}
+
+
+/* Notification Popup */
+
+.notification{
+
+    position: fixed;
+
+    top: 20px;
+
+    right: 20px;
+
+    background: #ff9800;
+
+    color: white;
+
+    padding: 15px 25px;
+
+    border-radius: 15px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+
+    z-index: 9999;
+
+    animation: slideIn 0.5s ease;
+
+    display: none;
+}
+
+/* Slide Animation */
+
+@keyframes slideIn{
+
+    from{
+
+        transform: translateX(300px);
+
+        opacity: 0;
+    }
+
+    to{
+
+        transform: translateX(0);
+
+        opacity: 1;
+    }
+}
+
+
+
+/* NEON BUTTONS */
+
+.neon-btn{
+
+    display: inline-block;
+
+    padding: 14px 28px;
+
+    margin: 10px;
+
+    border-radius: 12px;
+
+    border: 2px solid #00f7ff;
+
+    background: transparent;
+
+    color: #00f7ff;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: 0.4s ease;
+
+    box-shadow:
+    0 0 10px #00f7ff,
+    0 0 20px #00f7ff;
+
+}
+
+/* HOVER EFFECT */
+
+.neon-btn:hover{
+
+    background: #00f7ff;
+
+    color: #000;
+
+    transform: scale(1.08);
+
+    box-shadow:
+    0 0 20px #00f7ff,
+    0 0 40px #00f7ff,
+    0 0 60px #00f7ff;
+}
+
+/* GREEN BUTTON */
+
+.green-btn{
+
+    border-color: #39ff14;
+
+    color: #39ff14;
+
+    box-shadow:
+    0 0 10px #39ff14,
+    0 0 20px #39ff14;
+}
+
+.green-btn:hover{
+
+    background: #39ff14;
+
+    color: black;
+
+    box-shadow:
+    0 0 20px #39ff14,
+    0 0 40px #39ff14,
+    0 0 60px #39ff14;
+}
+
+/* RED BUTTON */
+
+.red-btn{
+
+    border-color: #ff3131;
+
+    color: #ff3131;
+
+    box-shadow:
+    0 0 10px #ff3131,
+    0 0 20px #ff3131;
+}
+
+.red-btn:hover{
+
+    background: #ff3131;
+
+    color: white;
+
+    box-shadow:
+    0 0 20px #ff3131,
+    0 0 40px #ff3131,
+    0 0 60px #ff3131;
+}
+
+
+/* LOADER */
+
+#loader{
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: #0f172a;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 99999;
+
+    color: white;
+}
+
+/* SPINNER */
+
+.spinner{
+
+    width: 80px;
+
+    height: 80px;
+
+    border: 8px solid rgba(255,255,255,0.2);
+
+    border-top: 8px solid #38bdf8;
+
+    border-radius: 50%;
+
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin{
+
+    100%{
+
+        transform: rotate(360deg);
+    }
+}
+
+#loader h2{
+
+    margin-top: 20px;
+
+    font-size: 22px;
+}
+
+
+
+/* THEME TOGGLE BUTTON */
+
+.theme-btn{
+
+    position: relative;
+
+    top: 20px;
+
+    right: 20px;
+
+    padding: 12px 25px;
+
+    border: none;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    background: #38bdf8;
+
+    color: white;
+
+    z-index: 9999;
+
+    transition: 0.3s;
+}
+
+.theme-btn:hover{
+
+    transform: scale(1.05);
+}
+
+/* LIGHT MODE */
+
+.light-mode{
+
+    background: #f5f5f5 !important;
+
+    color: #111 !important;
+}
+
+.light-mode .card{
+
+    background: white !important;
+
+    color: black !important;
+}
+
+.light-mode .sidebar{
+
+    background: #e2e8f0 !important;
+}
+
+.light-mode .logo{
+
+    color: black !important;
+}
+
+.light-mode a{
+
+    color: black !important;
+}
+
+.light-mode .alert{
+
+    color: black !important;
+}
+
+.theme-toggle{
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    z-index: 1000;
+}
+
+
+
+
+
+
+
+
+
+select{
+
+    width:300px;
+
+    padding:15px;
+
+    margin:10px;
+
+    border-radius:10px;
+
+    border:1px solid #ccc;
+
+    font-size:16px;
+
+    background:white;
+
+    cursor:pointer;
+
+    height:50px;
+
+    box-sizing:border-box;
+
+
+}
+
+
+
+
+
+
+.password-box{
+
+    position:relative;
+    
+    display:inline-block;
+
+    width:300px;
+
+    margin:auto;
+}
+
+.password-box input{
+
+    width:100%;
+
+    padding-right:45px;
+
+    box-sizing:border-box;
+}
+
+.password-box span{
+
+    position:absolute;
+
+    right:12px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    cursor:pointer;
+
+    font-size:20px;
+}
+
+
+
+input{
+
+    width:300px;
+
+    height:40px;
+
+    padding:10px;
+
+    border-radius:8px;
+
+    border:none;
+
+    font-size:16px;
+}
+
+
+.login-container{
+
+    background:rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(15px);
+
+    padding:40px;
+
+    border-radius:20px;
+
+    width:420px;
+
+    margin:auto;
+
+    box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+
+
+
+
+
+
+.logo{
+    font-size:40px;
+    text-align:center;
+    margin-bottom:15px;
+}
+
+
+
+a.neon-btn{
+    display:inline-block;
+    text-decoration:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* LIVE WEATHER STATUS CARD */
+
+.weather-status-card{
+
+    position: relative;
+
+    overflow: hidden;
+
+    animation: floatWeather 3s ease-in-out infinite;
+}
+
+/* Floating Animation */
+
+@keyframes floatWeather{
+
+    0%{
+        transform: translateY(0px);
+    }
+
+    50%{
+        transform: translateY(-8px);
+    }
+
+    100%{
+        transform: translateY(0px);
+    }
+}
+
+.weather-info{
+
+    margin-top:20px;
+}
+
+.weather-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:15px 0;
+
+    padding:12px 15px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:12px;
+
+    transition:0.3s;
+}
+
+.weather-item:hover{
+
+    background:rgba(56,189,248,0.25);
+
+    transform:translateX(8px);
+}
+
+.weather-item span{
+
+    color:#38bdf8;
+
+    font-weight:bold;
+
+    font-size:20px;
+}
+
+
+
+
+
+
+
+
+
+
+/* FARMER PROFILE CARD */
+
+.farmer-card{
+
+    border:2px solid #22c55e;
+}
+
+.farmer-card h2{
+
+    color:#22c55e;
+
+    margin-bottom:15px;
+}
+
+.farmer-card p{
+
+    font-size:18px;
+
+    margin:10px 0;
+}
+
+
+
+.farmer-card{
+    grid-column: span 2;
+}
+
+
+
+
+
+
+
+
+.sidebar .logout-btn{
+
+    background: rgba(255,0,0,0.2);
+
+    color: #ff4d4d;
+}
+
+.sidebar .logout-btn:hover{
+
+    background: rgba(255,0,0,0.4);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* EDIT PROFILE BUTTON */
+
+.edit-profile-btn{
+
+    margin-top:15px;
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#22c55e;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.edit-profile-btn:hover{
+
+    transform:scale(1.05);
+
+    background:#16a34a;
+
+    box-shadow:
+    0 0 15px rgba(34,197,94,0.7);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.edit-profile-container{
+
+    max-width:600px;
+
+    margin:50px auto;
+
+    padding:30px;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(10px);
+
+    border-radius:20px;
+
+    box-shadow:0 0 20px rgba(0,255,255,0.2);
+}
+
+.edit-profile-container h1{
+
+    text-align:center;
+
+    margin-bottom:30px;
+}
+
+.edit-profile-container label{
+
+    display:block;
+
+    margin-top:15px;
+
+    margin-bottom:5px;
+
+    font-weight:bold;
+
+    color:white;
+}
+
+.edit-profile-container input{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    margin-bottom:10px;
+
+    font-size:16px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* FARM STATISTICS CARD */
+
+.farm-stats-card{
+
+     border:2px solid #22c55e;
+
+    margin-top:20px;
+
+    grid-column: span 2;
+}
+
+
+
+.stat-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px;
+
+    margin:10px 0;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:12px;
+}
+
+.stat-item b{
+
+    color:#38bdf8;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.alert-card{
+    background: white;
+    color: black;   /* Add this */
+    padding: 20px;
+    margin: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    min-height: 120px; /* Optional */
+}
+
+.alert-card h2{
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.alert-card p{
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+}

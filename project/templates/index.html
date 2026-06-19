@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Agriculture Dashboard</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://unpkg.com/mqtt@5.10.4/dist/mqtt.min.js"></script>
+
+</head>
+
+<body>
+    <!-- Loading Spinner -->
+
+    <div id="loader">
+
+        <div class="spinner"></div>
+
+        <h2>LOADING 🌱 Smart Weather Monitoring System
+        Initializing Sensors......</h2>
+    </div>
+
+
+    <!-- Notification Popup -->
+
+    <div id="notification" 
+    class="notification">
+
+        ⚠️ Rain Detected in Field!
+
+    </div>
+    <div class="weather-animation">
+
+    <div class="cloud cloud1"></div>
+
+    <div class="cloud cloud2"></div>
+
+    <div class="sun"></div>
+
+    <div class="rain"></div>
+
+</div>
+
+    <div class="sidebar">
+
+    <h2 class="logo">📡 SMART WEATHER MONITORING 
+    SYSTEM</h2>
+
+    <ul>
+
+        <li><a href="#dashboard">🏠 Dashboard</a></li>
+
+        <li><a href="#temperature">🌡 Temperature</a></li>
+
+        <li><a href="#humidity">💧 Humidity</a></li>
+
+        <li><a href="#rain">🌧 Rain Monitor</a></li>
+
+        <li><a href="#air">🌫 Air Quality</a></li>
+
+        <li><a href="#irrigation">🚰 Irrigation</a></li>
+
+        <li><a href="#analytics">📊 Analytics</a></li>
+
+        <li><a href="#alerts">⚠ Alerts</a></li>
+
+        <li><a href="/sms-history">📩 SMS History</a></li>
+        
+        <li><a href="/logout" class="neon-btn
+            red-btn">
+                🚪 logout
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="main-content">
+
+    <button id="themeToggle" 
+    class="theme-btn">
+        🌙 Dark Mode
+    </button>
+
+    <div class="clock-container">
+
+        <div id="clock"></div>
+
+        <div id="date"></div>
+
+    </div>
+
+<div class="background"></div>
+
+<div class="container" id="dashboard">
+
+    <h1>🌾 Smart Agriculture Dashboard</h1>
+
+    <div class="dashboard">
+
+
+        <div class="card farmer-card">
+
+            <h2>👨‍🌾 FARMER PROFILE :</h2>
+
+            <p>👤 {{ session['username'] }}</p>
+
+            <p>📍 {{ farmer['location'] }}</p>
+
+            <p>🏛 {{ farmer['district'] }}</p>
+
+            <p>🌎 {{ farmer['state'] }}</p>
+
+            <p>📨 {{ farmer['email'] }}</p>
+
+            <p>📱 {{ farmer['phone'] }}</p>
+
+            <a href="/edit-profile" 
+            class="edit-profile-btn">
+                ✏️ Edit Profile
+            </a>
+
+        </div>
+
+
+
+
+
+        <div class="card farm-stats-card">
+
+            <h2>🌱 FARM STATISTICS</h2>
+
+            <div class="stat-item">
+                <span>🌾 Crop Type</span>
+                <b>
+                {% if farmer.get('crop_type') %}
+                    {{ farmer['crop_type'] }}
+                {% else %}
+                    Profile Incomplete
+                {% endif %}
+                </b>
+            </div>
+
+            <div class="stat-item">
+                <span>📏 Farm Area</span>
+                <b>
+                {% if farmer.get('farm_area') %}
+                    {{ farmer['farm_area'] }} Acres
+                {% else %}
+                    Profile Incomplete
+                {% endif %}
+                </b>
+            </div>
+
+            <div class="stat-item">
+                <span>💧 Soil Moisture</span>
+                <b id="soilValue">0 %</b>
+            </div>
+
+            <div class="stat-item">
+                <span>🚰 Irrigation</span>
+                <b id="irrigationValue">
+                    {{ irrigation }}
+                </b>
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="card" id="temperature">
+            <h2>🌡 Temperature</h2>
+            <p id="temperatureValue">0 °C</p>
+        </div>
+
+        <div class="card" id="humidity">
+            <h2>💧 Humidity</h2>
+            <p id="humidityValue">0 %</p>
+        </div>
+
+        <div class="card" id="rain">
+            <h2>🌧 Rain Status</h2>
+            <p id="rainValue">No Data</p>
+        </div>
+
+        
+
+        <div class="card" id="air">
+            <h2>🌫 Air Quality</h2>
+            <p id="airQualityValue">0</p>
+        </div>
+
+
+
+
+
+        <div class="card" id="pressure">
+            <h2>⚡ Pressure</h2>
+            <p id="pressureValue">0 hPa</p>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            
+
+
+        <div class="card" id="irrigation">
+            <h2>🚰 Irrigation</h2>
+
+            <p id="pumpStatus">
+                {{ irrigation }}
+            </p>
+        </div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+        <div class="alert-card">
+            <h2>📢 Last Alert</h2>
+
+            <p id="lastAlert">
+                {% if last_alert %}
+                    {{ last_alert }}
+                {% else %}
+                    No alerts yet
+                {% endif %}
+            </p>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    </div>
+
+
+    <div style="margin-top:20px;">
+
+        <button class="neon-btn">
+            View Analytics
+        </button>
+
+        <button class="neon-btn green-btn"
+        onclick="pumpOn()">
+            Pump ON
+        </button>
+
+        <button class="neon-btn red-btn"
+        onclick="pumpOff()">
+            Pump OFF
+        </button>
+
+    </div>
+
+    <div class="alert" id="alerts">
+        {{ alert }}
+    </div>
+
+    <div class="charts" id="analytics">
+
+        <div class="chart-card weather-status-card">
+
+            <h2>🌾 Field Weather Summary</h2>
+
+            <div class="weather-info">
+
+                <div class="weather-item">
+                    🌡 Temperature
+                    <span id="summaryTemp">0°C</span>
+                </div>
+
+                <div class="weather-item">
+                    💧 Humidity
+                    <span id="summaryHum">0%</span>
+                </div>
+
+                <div class="weather-item">
+                    🌧 Rain
+                    <span id="summaryRain">No 
+                Rain</span>
+                </div>
+
+                <div class="weather-item">
+                    🌫 Air Quality
+                    <span id="summaryAir">0</span>
+                </div>
+
+                <div class="weather-item">
+                    ⚡ Pressure
+                    <span id="summaryPressure">0hPa</span>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h2>🌡 Temperature Graph</h2>
+            <canvas id="tempChart"></canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h2>💧 Humidity Graph</h2>
+            <canvas id="humChart"></canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h2>🌧 Rainfall History</h2>
+
+            <canvas id="rainChart"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+
+// Temperature Data
+
+let tempLabels = [];
+
+let tempData = [];
+
+// Humidity Data
+
+let humLabels = [];
+
+let humData = [];
+
+
+// TEMPERATURE CHART
+
+const tempChart = new Chart(
+document.getElementById('tempChart'),
+{
+    type: 'line',
+
+    data: {
+
+        labels: tempLabels,
+
+        datasets: [{
+
+            label: 'Temperature °C',
+
+            data: tempData,
+
+            borderWidth: 3,
+
+            tension: 0.4,
+
+            fill: true
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+
+        animation: {
+            duration: 1000
+        }
+    }
+});
+
+
+// HUMIDITY CHART
+
+const humChart = new Chart(
+document.getElementById('humChart'),
+{
+    type: 'bar',
+
+    data: {
+
+        labels: humLabels,
+
+        datasets: [{
+
+            label: 'Humidity %',
+
+            data: humData,
+
+            borderWidth: 2
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+
+        animation: {
+            duration: 1000
+        }
+    }
+});
+
+// RAINFALL DATA
+
+// RAINFALL DATA
+let rainLabels = [];
+
+let rainData = [];
+
+// ADD FIRST VALUE
+
+rainData.push(
+    Math.floor(Math.random() * 2)
+);
+
+const rainChart = new Chart(
+document.getElementById('rainChart'),
+{
+    type: 'line',
+
+    data: {
+
+        labels: ['1','2','3','4','5'],
+
+        datasets: [{
+
+            label: 'Rainfall',
+
+            data: rainData,
+
+            borderWidth: 3,
+
+            tension: 0.4
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                max: 1,
+
+                ticks: {
+
+                    callback: function(value){
+
+                        return value === 1
+                        ? 'Rain'
+                        : 'No Rain';
+                    }
+                }
+            }
+        }
+    }
+});
+// LIVE UPDATE FUNCTION
+
+/*setInterval(() => {
+
+    // Random values for testing
+
+    let newTemp =
+    Math.floor(Math.random() * 15) + 25;
+
+    let newHum =
+    Math.floor(Math.random() * 30) + 50;
+
+    let newRain =
+    Math.random() > 0.5 ? 1 : 0;
+
+    // Add new labels
+
+    tempLabels.push('');
+
+    humLabels.push('');
+
+    // Add new data
+
+    tempData.push(newTemp);
+
+    humData.push(newHum);
+
+    rainData.push(newRain);
+
+    if(rainData.length > 10){
+
+        rainData.shift();
+
+        rainChart.data.labels.shift();
+    }
+
+    rainChart.data.labels.push('');
+
+    rainChart.data.datasets[0].data =
+    rainData;
+
+    rainChart.update();
+
+    // Remove old values
+
+    if(tempData.length > 10){
+
+        tempData.shift();
+
+        tempLabels.shift();
+    }
+
+    if(humData.length > 10){
+
+        humData.shift();
+
+        humLabels.shift();
+    }
+
+    if(rainData.length > 10){
+        
+        rainData.shift();
+
+        rainLabels.shift();
+    }
+
+    // Update charts
+
+    tempChart.update();
+
+    humChart.update();
+
+    rainChart.update();
+
+}, 3000); 
+*/
+
+// REAL TIME CLOCK
+
+function updateClock(){
+
+    const now = new Date();
+
+    // TIME
+
+    let hours =
+    now.getHours();
+
+    let ampm =
+    hours >= 12 ? 'PM' : 'AM';
+
+    hours =
+    hours % 12;
+
+    hours =
+    hours ? hours : 12;
+
+    let minutes =
+    now.getMinutes();
+
+    let seconds =
+    now.getSeconds();
+
+    // ADD ZERO
+
+    hours =
+    hours < 10 ? '0' + hours : hours;
+
+    minutes =
+    minutes < 10 ? '0' + minutes : minutes;
+
+    seconds =
+    seconds < 10 ? '0' + seconds : seconds;
+
+    // DISPLAY TIME
+
+    document.getElementById('clock')
+    .innerHTML =
+    `${hours}:${minutes}:${seconds} ${ampm}`;
+
+    // DATE
+
+    const options = {
+
+        weekday: 'long',
+
+        year: 'numeric',
+
+        month: 'long',
+
+        day: 'numeric'
+    };
+
+    document.getElementById('date')
+    .innerHTML =
+    now.toLocaleDateString(
+        'en-US',
+        options
+    );
+}
+
+// UPDATE EVERY SECOND
+
+setInterval(updateClock, 1000);
+
+// RUN IMMEDIATELY
+
+updateClock();
+
+// SHOW NOTIFICATION
+
+function showNotification(message){
+
+
+   
+
+    const notification =
+    document.getElementById("notification");
+
+    notification.innerHTML =
+    message;
+
+    notification.style.display =
+    "block";
+
+    // HIDE AFTER 4 SECONDS
+
+    setTimeout(() => {
+
+        notification.style.display =
+        "none";
+
+    }, 4000);
+}
+
+
+
+// DEMO ALERTS
+/*
+setTimeout(() => {
+
+    showNotification(
+        "🌧 Rain Detected!"
+    );
+
+}, 3000);
+
+
+
+setTimeout(() => {
+
+    showNotification(
+        "🌡 High Temperature Alert!"
+    );
+
+}, 8000);
+*/
+
+// LOADING SPINNER
+
+window.onload = function(){
+
+    setTimeout(() => {
+
+        document.getElementById(
+            "loader"
+        ).style.display = "none";
+
+    }, 1500);
+
+};
+
+
+// DARK / LIGHT MODE
+
+const themeBtn =
+document.getElementById("themeToggle");
+
+themeBtn.addEventListener("click", () => {
+
+    document.body.classList.toggle(
+        "light-mode"
+    );
+
+    if(
+        document.body.classList.contains(
+            "light-mode"
+        )
+    ){
+
+        themeBtn.innerHTML =
+        "☀️ Light Mode";
+
+    }else{
+
+        themeBtn.innerHTML =
+        "🌙 Dark Mode";
+    }
+
+});
+</script>
+</div>
+<script>
+
+function pumpOn() {
+    document.getElementById("pumpStatus").innerHTML =
+    "🟢 Water Pump ON";
+}
+
+function pumpOff() {
+    document.getElementById("pumpStatus").innerHTML =
+    "🔴 Water Pump OFF";
+}
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+let lastNotification = "";
+let lastNotificationTime = 0;
+
+
+
+const client = mqtt.connect(
+'wss://broker.hivemq.com:8884/mqtt'
+);
+
+
+
+client.on('error', (err) => {
+    console.log("MQTT ERROR:", err);
+});
+
+client.on('offline', () => {
+    console.log("MQTT OFFLINE");
+});
+
+
+
+
+
+
+
+
+
+client.on('connect', () => {
+
+    console.log("MQTT Connected");
+
+    client.subscribe('weatherstation/temperature');
+    client.subscribe('weatherstation/humidity');
+    client.subscribe('weatherstation/pressure');
+    client.subscribe('weatherstation/smoke');
+    client.subscribe('weatherstation/rain');
+    client.subscribe('weatherstation/soil');
+    client.subscribe('weatherstation/pump');
+
+});
+
+client.on('message', (topic, message) => {
+
+    let value = message.toString();
+
+    console.log(topic, value);
+
+    if(topic === 'weatherstation/temperature'){
+
+        document.getElementById(
+        'temperatureValue'
+        ).innerHTML = value + " °C";
+
+
+        document.getElementById(
+        'summaryTemp'
+        ).innerHTML = value + " °C";
+
+
+        tempLabels.push('');
+
+    tempData.push(Number(value));
+
+        if(tempData.length > 10){
+            tempData.shift();
+            tempLabels.shift();
+        }
+
+        tempChart.data.labels = tempLabels;
+    tempChart.data.datasets[0].data = tempData;
+        tempChart.update();
+
+
+
+        if(Number(value) > 35){
+
+            document.getElementById("alerts").innerHTML =
+            "⚠ High Temperature Alert";
+
+            document.getElementById("lastAlert").innerHTML =
+            "⚠ High Temperature Alert";
+
+            showNotification(
+            "⚠ High Temperature Alert"
+            );
+        }
+
+
+
+    }
+
+    if(topic === 'weatherstation/humidity'){
+
+        document.getElementById(
+        'humidityValue'
+        ).innerHTML = value + " %";
+
+        document.getElementById(
+        'summaryHum'
+        ).innerHTML = value + " %";
+
+        humLabels.push('');
+
+        humData.push(Number(value));
+
+        if(humData.length > 10){
+            humData.shift();
+            humLabels.shift();
+        }
+
+        humChart.data.labels = humLabels;
+    humChart.data.datasets[0].data = humData;
+        humChart.update();
+
+
+        
+
+        if(Number(value) > 80){
+
+            document.getElementById("alerts").innerHTML =
+            "⚠ High Humidity Alert";
+
+            document.getElementById("lastAlert").innerHTML =
+            "⚠ High Humidity Alert";
+
+            showNotification(
+            "⚠ High Humidity Alert"
+            );
+        }
+
+
+
+
+    }
+
+    if(topic === 'weatherstation/pressure'){
+
+        document.getElementById(
+        'pressureValue'
+        ).innerHTML = value + " hPa";
+
+        document.getElementById(
+        'summaryPressure'
+        ).innerHTML = value + " hPa";
+    }
+
+    if(topic === 'weatherstation/smoke'){
+
+        document.getElementById(
+        'airQualityValue'
+        ).innerHTML = value;
+
+        document.getElementById(
+        'summaryAir'
+        ).innerHTML = value;
+
+
+
+        if(Number(value) > 50){
+
+            document.getElementById("alerts").innerHTML =
+            "⚠ Smoke Detected - Poor Air Quality";
+
+            document.getElementById("lastAlert").innerHTML =
+            "⚠ Smoke Detected - Poor Air Quality";
+
+            showNotification(
+            "⚠ Smoke Detected"
+            );
+        }
+    }
+
+    if(topic === 'weatherstation/rain'){
+
+        let rainValueNum = value == "1" ? 1 : 0;
+
+        rainLabels.push('');
+
+        rainData.push(rainValueNum);
+
+        if(rainData.length > 10){
+            rainData.shift();
+            rainLabels.shift();
+        }
+
+        rainChart.data.labels = rainLabels;
+    rainChart.data.datasets[0].data = rainData;
+        rainChart.update();
+
+        if(value == "1"){
+
+            document.getElementById(
+            'rainValue'
+            ).innerHTML = "🌧 Rain Detected";
+
+        }else{
+
+            document.getElementById(
+            'rainValue'
+            ).innerHTML = "☀ No Rain";
+        }
+
+
+
+        document.getElementById(
+        'summaryRain'
+        ).innerHTML =
+        value == "1" ? "Rain Detected" : "No Rain";
+
+
+
+
+
+        if(Number(value) < 2700){
+
+            document.getElementById("alerts").innerHTML =
+            "⚠ Rain Detected - Water Pump Is OFF";
+
+            document.getElementById("lastAlert").innerHTML =
+            "⚠ Rain Detected - Water Pump Is OFF";
+
+            showNotification(
+            "⚠ Rain Detected"
+            );
+        }
+
+
+
+
+    }
+
+    if(topic === 'weatherstation/soil'){
+
+        document.getElementById(
+        'soilValue'
+        ).innerHTML = value + " %";
+
+
+        if(Number(value) > 2500){
+
+    document.getElementById("alerts").innerHTML =
+            "⚠ Soil Is Too Dry - Water Pump is ON";
+
+    document.getElementById("lastAlert").innerHTML =
+            "⚠ Soil Is Too Dry - Water Pump is ON";
+
+            showNotification(
+            "⚠ Soil Is Too Dry"
+            );
+        }
+    }
+
+    if(topic === 'weatherstation/pump'){
+
+        document.getElementById(
+        'pumpStatus'
+        ).innerHTML = value;
+
+
+        document.getElementById(
+        'irrigationValue'
+        ).innerHTML = value;
+    }
+
+});
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>>
